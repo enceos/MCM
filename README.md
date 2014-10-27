@@ -1,4 +1,4 @@
-Multipurpose Colony Modules
+﻿Multipurpose Colony Modules
 
 Do you like using the awesome Modular Kolonization System by RoverDude? Love the adorable KSO shuttles? Do you wish the MKS modules would fit inside the Super 25 without clipping through the payload bays and getting stuck, or that there were MKS modules for the KSO 1.8? Is your parts catalog overflowing? Then the Multipurpose Colony Modules may be the answer for you.
 Requires the USI Kolonization Systems mod by RoverDude
@@ -23,7 +23,7 @@ Copy the WildBlueIndustries directory and Firespitter directory into your GameDa
 
 ---REVISION HISTORY---
 
-0.1: Initial revision
+0.1.1: Initial revision
 
 ---LICENSE---
 
