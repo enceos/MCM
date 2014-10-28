@@ -14,7 +14,7 @@ Multipurpose Colony Module (MCM) Features
 
 Multipurpose Base Unit (MBU) Features
 •	Fits within the 2.5m standard payload diameter.
-•	Fully configurable within the VAB/SPH to provide desired storage of materials such as up to 240 units of KAS, life support, mining/agriculture, refining, equipment, and manufacturing goods.
+•	Fully configurable within the VAB/SPH to provide desired storage of materials such as up to 80 units of KAS, life support, mining/agriculture, refining, equipment, and manufacturing goods.
 •	Integrated landing legs.
 
 ---INSTALLATION---
@@ -23,7 +23,9 @@ Copy the WildBlueIndustries directory and Firespitter directory into your GameDa
 
 ---REVISION HISTORY---
 
-0.1: Initial revision
+0.1.2: Added surface attach ability to the MBU. Modified Repair Shop template to use correct converter values. Fixed LiquidFuel value for Refueling template. Fixed issue in the SPH that prevented the MCM/MBU from switching types.
+
+0.1.1: Initial revision
 
 ---LICENSE---
 

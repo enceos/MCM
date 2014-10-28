@@ -186,6 +186,9 @@ namespace WildBlueIndustries
             if (this.templateNodes == null)
                 return -1;
 
+            if (this.templateNodes.Count<ConfigNode>() == 0)
+                return -1;
+
             //Get prev index in template array
             prevIndex = prevIndex - 1;
             if (prevIndex < 0)
@@ -199,6 +202,9 @@ namespace WildBlueIndustries
             int nextIndex = startIndex;
 
             if (this.templateNodes == null)
+                return -1;
+
+            if (this.templateNodes.Count<ConfigNode>() == 0)
                 return -1;
 
             //Get next index in template array

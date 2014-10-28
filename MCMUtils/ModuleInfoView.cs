@@ -32,9 +32,7 @@ namespace WildBlueIndustries
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
             }
-            GUILayout.BeginHorizontal();
             GUILayout.Label(ModuleInfo);
-            GUILayout.EndHorizontal();
             GUILayout.EndScrollView();
         }
 

@@ -28,7 +28,7 @@ namespace WildBlueIndustries
         protected float moduleMass = -1.0f;
 
         [KSPField]
-        public string mksResources;
+        public string resourcesToReplace;
 
         //Decal names (these are the names of the graphics assets, including file path)
         protected string logoPanelName;
@@ -39,10 +39,10 @@ namespace WildBlueIndustries
         private string _logoPanelTransforms;
 
         //List of MKS resources that we need to clear out when switching module types
-        private string _mksResources;
+        private string _resourcesToReplace;
 
         //Used when, say, we're in the editor, and we don't get no game-saved values from perisistent.
-        private string _defaultColonyTemplate;
+        private string _defaultTemplate;
 
         //Base location to the decals
         private string _decalBasePath;
@@ -477,7 +477,7 @@ namespace WildBlueIndustries
             foreach (PartResource resourceToCheck in resourceList)
             {
                 //Find all the MKS-related resources
-                if (_mksResources.Contains(resourceToCheck.resourceName) == false)
+                if (_resourcesToReplace.Contains(resourceToCheck.resourceName) == false)
                     savedResources.Add(resourceToCheck);
             }
 
@@ -758,10 +758,10 @@ namespace WildBlueIndustries
 
                 //Set the defaults. We'll need them when we're in the editor
                 //because the persistent KSP field seems to only apply to savegames.
-                _defaultColonyTemplate = protoNode.GetValue("defaultColonyTemplate");
+                _defaultTemplate = protoNode.GetValue("defaultTemplate");
 
                 //Get the list of MKS resources involved in creating colony modules
-                _mksResources = protoNode.GetValue("mksResources");
+                _resourcesToReplace = protoNode.GetValue("resourcesToReplace");
 
                 //Info decals path
                 _infoDecalsPath = protoNode.GetValue("infoDecalsPath");
@@ -921,7 +921,7 @@ namespace WildBlueIndustries
             //Set default template if needed
             //This will happen when we're in the editor.
             if (string.IsNullOrEmpty(shortName))
-                shortName = _defaultColonyTemplate;
+                shortName = _defaultTemplate;
 
             //Set current template index
             _currentTemplateIndex = _mksTemplates.FindIndexOfTemplate(shortName);
