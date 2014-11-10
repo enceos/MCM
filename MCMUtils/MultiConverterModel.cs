@@ -18,8 +18,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 */
 namespace WildBlueIndustries
 {
-    public delegate void LogDelegate(object message);
-
     class MultiConverterModel
     {
         public LogDelegate logDelegate = null;
@@ -55,6 +53,7 @@ namespace WildBlueIndustries
 
         public void Load(ConfigNode node)
         {
+            Log("[MultiConverterModel] Load called.");
             ConfigNode[] converterNodes = node.GetNodes("KolonyConverter");
             PartModule genericConverter;
 
@@ -82,6 +81,8 @@ namespace WildBlueIndustries
                 //Add to the list
                 converters.Add(genericConverter);
             }
+
+            Log("[MultiConverterModel] converter count: " + converters.Count<PartModule>());
         }
 
         public void Save(ConfigNode node)
@@ -233,6 +234,8 @@ namespace WildBlueIndustries
 
         public void OnStart(PartModule.StartState state)
         {
+            Log("[MulticonverterModel] OnStart - State: " + state + "  Converter count: " + converters.Count<PartModule>());
+
             foreach (PartModule converter in converters)
             {
                 RunHeadless(converter);
@@ -375,6 +378,7 @@ namespace WildBlueIndustries
 
         public void RunHeadless(PartModule converter)
         {
+            Log("RunHeadless called.");
             if (converter.Events["ActivateConverter"] != null)
             {
                 converter.Events["ActivateConverter"].active = false;

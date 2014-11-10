@@ -23,6 +23,8 @@ Copy the WildBlueIndustries directory and Firespitter directory into your GameDa
 
 ---REVISION HISTORY---
 
+0.1.3: Introduced The Foot, an asteroid grabber designed to attach to the bottom of the MBU. Fixed an issue preventing the science lab from cleaning lab experiments and processing lab data. Added SpareParts resources to modules.
+
 0.1.2: Added surface attach ability to the MBU. Modified Repair Shop template to use correct converter values. Fixed LiquidFuel value for Refueling template. Fixed issue in the SPH that prevented the MCM/MBU from switching types.
 
 0.1.1: Initial revision

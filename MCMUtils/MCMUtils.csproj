@@ -50,12 +50,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MKSModuleController.cs" />
     <Compile Include="MKSStorageController.cs" />
-    <Compile Include="MKSTemplatesModel.cs" />
     <Compile Include="MultiConverterModel.cs" />
     <Compile Include="ModuleInfoView.cs" />
     <Compile Include="ModuleOpsView.cs" />
-    <Compile Include="MKSModuleController.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
