@@ -147,7 +147,7 @@ namespace WildBlueIndustries
 
         public string GetRequirements(int index)
         {
-            ConfigNode[] templateNodes = GameDatabase.Instance.GetConfigNodes("MKSTEMPLATE");
+            ConfigNode[] templateNodes = GameDatabase.Instance.GetConfigNodes("nodeTemplate");
 
             if (templateNodes == null)
                 return "";

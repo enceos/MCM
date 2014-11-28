@@ -2,6 +2,7 @@ Multipurpose Colony Modules
 
 Do you like using the awesome Modular Kolonization System by RoverDude? Love the adorable KSO shuttles? Do you wish the MKS modules would fit inside the Super 25 without clipping through the payload bays and getting stuck, or that there were MKS modules for the KSO 1.8? Is your parts catalog overflowing? Then the Multipurpose Colony Modules may be the answer for you.
 Requires the USI Kolonization Systems mod by RoverDude
+
 Multipurpose Colony Module (MCM) Features
 •	Fits within the 2.5m standard payload diameter.
 •	Ruggedized construction provides high crash tolerance in a lightweight frame.
@@ -14,14 +15,26 @@ Multipurpose Colony Module (MCM) Features
 
 Multipurpose Base Unit (MBU) Features
 •	Fits within the 2.5m standard payload diameter.
-•	Fully configurable within the VAB/SPH to provide desired storage of materials such as up to 80 units of KAS, life support, mining/agriculture, refining, equipment, and manufacturing goods.
+•	Fully configurable within the VAB/SPH to provide desired storage of materials such as up to 80 units of KAS, life support, mining/agriculture, refining, equipment, and more.
 •	Integrated landing legs.
+
+The Foot Features
+•	Compact design that fits under the MBU.
+•	Uses the existing logic for "The Claw," no retraining needed.
+
+Inflatable Multipurpose Warehouse (IMW) Features
+•	KAS storable in most containers.
+•	Configurable in the VAB/SPH as well as in the field.
+•	Holds a wide variety of different resources
+
 
 ---INSTALLATION---
 
 Copy the WildBlueIndustries directory and Firespitter directory into your GameData folder.
 
 ---REVISION HISTORY---
+
+0.2: Updated The Foot's art assets. Introduced the Inflatable Multipurpose Warehouse. Fixed a problem with the MBU leaping into the air upon being deployed with legs out from the VAB/SPH- thanks nil2work! :) Fixed efficiency parts on kerbitat and greenhouse templates.
 
 0.1.3: Introduced The Foot, an asteroid grabber designed to attach to the bottom of the MBU. Fixed an issue preventing the science lab from cleaning lab experiments and processing lab data. Added SpareParts resources to modules.
 

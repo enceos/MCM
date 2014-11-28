@@ -260,7 +260,7 @@ namespace WildBlueIndustries
             updateMKSModuleFromTemplate(templateNode);
         }
 
-        protected void updateMKSModuleFromTemplate(ConfigNode mksTemplate)
+        protected void updateMKSModuleFromTemplate(ConfigNode nodeTemplate)
         {
             string value;
 
@@ -274,17 +274,17 @@ namespace WildBlueIndustries
                     Utils.SetField("hasGenerators", false, mksModule);
 
                 //workspace
-                value = mksTemplate.GetValue("workspace");
+                value = nodeTemplate.GetValue("workspace");
                 if (!string.IsNullOrEmpty(value))
                     Utils.SetField("workSpace", int.Parse(value), mksModule);
 
                 //livingSpace
-                value = mksTemplate.GetValue("livingSpace");
+                value = nodeTemplate.GetValue("livingSpace");
                 if (!string.IsNullOrEmpty(value))
                     Utils.SetField("livingSpace", int.Parse(value), mksModule);
 
                 //efficiencyPart
-                value = mksTemplate.GetValue("efficiencyPart");
+                value = nodeTemplate.GetValue("efficiencyPart");
                 if (!string.IsNullOrEmpty(value))
                     Utils.SetField("efficiencyPart", value, mksModule);
             }
