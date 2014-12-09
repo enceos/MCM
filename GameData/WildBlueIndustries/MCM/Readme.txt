@@ -27,12 +27,18 @@ Inflatable Multipurpose Warehouse (IMW) Features
 •	Configurable in the VAB/SPH as well as in the field.
 •	Holds a wide variety of different resources
 
+Skydock 250 Features
+•	Compact enough to fit within the 2.5m standard payload diameter.
+•	Accomodates vessels up to 11 meters in diameter.
+•	Compatible with Extraplanetary Launchpads. Uses the standard Ore->Metal->RocketParts resource path.
 
 ---INSTALLATION---
 
 Copy the WildBlueIndustries directory and Firespitter directory into your GameData folder.
 
 ---REVISION HISTORY---
+
+0.2.5: Fixed a template issue preventing the Equipment storage template from working. Fixed a problem that prevented the Inflatable Multipurpose Warehouse (IMW) from remembering if it was inflated or deflated. Fixed a problem with the IMW that prevented it from remembering its max storage amounts when the scene loads. Fixed an isse where the MCM would not know what templates it had after loading into a scene. Added Rocket Workshop MCM template and RocketParts MBU/IMW templates. Added Skydock 250 part.
 
 0.2: Updated The Foot's art assets. Introduced the Inflatable Multipurpose Warehouse. Fixed a problem with the MBU leaping into the air upon being deployed with legs out from the VAB/SPH- thanks nil2work! :) Fixed efficiency parts on kerbitat and greenhouse templates.
 

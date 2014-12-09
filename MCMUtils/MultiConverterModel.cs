@@ -97,6 +97,7 @@ namespace WildBlueIndustries
 
                 //Save the converter's data
                 SaveToNode(converter, converterNode);
+                converterNode.AddValue("MM_DYNAMIC", "true");
 
                 //Add converter node to the node we're saving to.
                 node.AddNode(converterNode);
