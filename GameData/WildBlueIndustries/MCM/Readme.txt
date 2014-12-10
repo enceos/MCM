@@ -38,6 +38,8 @@ Copy the WildBlueIndustries directory and Firespitter directory into your GameDa
 
 ---REVISION HISTORY---
 
+0.2.6: Added ability to scrap vessels to the Skydock 250. Thanks for the suggestion, RainDreamer! :)
+
 0.2.5: Fixed a template issue preventing the Equipment storage template from working. Fixed a problem that prevented the Inflatable Multipurpose Warehouse (IMW) from remembering if it was inflated or deflated. Fixed a problem with the IMW that prevented it from remembering its max storage amounts when the scene loads. Fixed an isse where the MCM would not know what templates it had after loading into a scene. Added Rocket Workshop MCM template and RocketParts MBU/IMW templates. Added Skydock 250 part.
 
 0.2: Updated The Foot's art assets. Introduced the Inflatable Multipurpose Warehouse. Fixed a problem with the MBU leaping into the air upon being deployed with legs out from the VAB/SPH- thanks nil2work! :) Fixed efficiency parts on kerbitat and greenhouse templates.
