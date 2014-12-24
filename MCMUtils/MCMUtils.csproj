@@ -50,6 +50,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MKSExtensionModule.cs" />
     <Compile Include="MKSModuleController.cs" />
     <Compile Include="MKSStorageController.cs" />
     <Compile Include="MultiConverterModel.cs" />

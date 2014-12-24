@@ -213,22 +213,16 @@ namespace WildBlueIndustries
         {
             GUILayout.BeginVertical(GUILayout.MinHeight(110));
             bool converterEnabled = false;
-            string converterName;
-            string converterStatus;
-            bool showRemainingTime = false;
-            string remainingTime;
-            string constraintDisplay;
- 
+            string converterName = "??";
+            string converterStatus = "??";
+
             _scrollPosConverters = GUILayout.BeginScrollView(_scrollPosConverters, new GUIStyle(GUI.skin.textArea));
 
             foreach (PartModule converter in converters)
             {
-                converterEnabled = (bool)Utils.GetField("converterEnabled", converter);
-                converterName = (string)Utils.GetField("converterName", converter);
-                converterStatus = (string)Utils.GetField("converterStatus", converter);
-                showRemainingTime = (bool)Utils.GetField("showRemainingTime", converter);
-                remainingTime = (string)Utils.GetField("remainingTimeDisplay", converter);
-                constraintDisplay = (string)Utils.GetField("constraintDisplay", converter);
+                converterEnabled = (bool)Utils.GetField("IsActivated", converter);
+                converterName = (string)Utils.GetField("ConverterName", converter);
+                converterStatus = (string)Utils.GetField("status", converter);
 
                 GUILayout.BeginVertical();
                 //Toggle, name and status message
@@ -236,14 +230,8 @@ namespace WildBlueIndustries
                     converterEnabled = GUILayout.Toggle(converterEnabled, converterName + ": " + converterStatus);
                 else
                     converterEnabled = GUILayout.Toggle(converterEnabled, converterName);
-                Utils.SetField("converterEnabled", converterEnabled, converter);
+                Utils.SetField("IsActivated", converterEnabled, converter);
 
-                //Time remaining
-                if (showRemainingTime)
-                    GUILayout.Label("Remaining: " + remainingTime);
-
-                //Constraints
-                GUILayout.Label("Constraints: " + constraintDisplay);
                 GUILayout.EndVertical();
             }
             GUILayout.EndScrollView();

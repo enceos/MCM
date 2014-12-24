@@ -31,12 +31,27 @@ Skydock 250 Features
 •	Compact enough to fit within the 2.5m standard payload diameter.
 •	Accomodates vessels up to 11 meters in diameter.
 •	Compatible with Extraplanetary Launchpads. Uses the standard Ore->Metal->RocketParts resource path.
+•	Scrap vessels with the built-in Recycler.
 
 ---INSTALLATION---
 
 Copy the WildBlueIndustries directory and Firespitter directory into your GameData folder.
 
 ---REVISION HISTORY---
+
+0.3.0: IMPORTANT NOTE: 0.3.0 is a game-breaking change! Be sure to retire your existing bases/spacecraft before applying this update.
+- Recompiled for KSP 0.9.0 Beta.
+- Refactored templates for compatibility with USI Kolonization Systems by RoverDude. Reminder: You need to download the USI Kolonization Systems mod separately.
+- Added Ore, Metal, and KAS storage templates.
+- The Colony Command Center can now act as a survey module for Extraplanetary Launchpads (EL).
+- Removed Rocket Workshop MCM-EL template- building RocketParts is handled by the Machinery template.
+- Added Skydock 375. The Skydock 375 can support vessels up to 42 meters in diameter.
+- Added the Multipurpose Storage Module (MSM), a non-inflatable storage unit available earlier in the tech tree than the Inflatable Multipurpose Warehouse.
+- Added the Inflatable Multipurpose Extension Module (IMEM), a KAS-storable and attachable workspace/living space extension (efficency part). Production modules like the Fabrication, Refinery, Fuel Refinery, Repair Shop, and Machinery Plant use this to make stuff.
+- Refactored stock tech tree progression of the multipurpose modules (CTT is planned, but is further down the road).
+
+Known Issues
+- Using the MBU or MCM as a root part might cause part separation upon loading the spacecraft. This issue is continuing to be investigated. Don't use them as root parts.
 
 0.2.6: Added ability to scrap vessels to the Skydock 250. Thanks for the suggestion, RainDreamer! :)
 

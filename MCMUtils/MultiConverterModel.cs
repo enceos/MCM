@@ -108,6 +108,16 @@ namespace WildBlueIndustries
         {
             Log("AddFromTemplate called");
             PartModule converter = this.part.AddModule(node);
+            if (converter == null)
+                Log("Converter is null");
+            else
+                Log("Converter is not null");
+
+            foreach (BaseField field in converter.Fields)
+            {
+                Debug.Log("field.name: " + field.name);
+                Debug.Log("value: " + field.GetValue(field.host));
+            }
 
             //Remove the converter's GUI
             RunHeadless(converter);
@@ -183,7 +193,7 @@ namespace WildBlueIndustries
                         continue;
 
                     //Ok, now get the required resources
-                    required = converterNode.GetValue("requiredResources");
+                    required = converterNode.GetValue("RequiredResources");
                     if (string.IsNullOrEmpty(required))
                         continue;
 
@@ -286,34 +296,19 @@ namespace WildBlueIndustries
             //We'll get the private fields saved this way
             converter.Save(node);
 
-            node.AddValue("converterName", (string)Utils.GetField("converterName", converter));
+            node.AddValue("ConverterName", (string)Utils.GetField("ConverterName", converter));
 
-            floatValue = (float)Utils.GetField("conversionRate", converter);
-            node.AddValue("conversionRate", floatValue.ToString());
+            floatValue = (float)Utils.GetField("EfficiencBonus", converter);
+            node.AddValue("EfficiencBonus", floatValue.ToString());
 
-            node.AddValue("inputResources", (string)Utils.GetField("inputResources", converter));
+            node.AddValue("RecipeInputs", (string)Utils.GetField("RecipeInputs", converter));
 
-            node.AddValue("outputResources", (string)Utils.GetField("outputResources", converter));
+            node.AddValue("RecipeOutputs", (string)Utils.GetField("RecipeOutputs", converter));
 
-            node.AddValue("requiredResources", (string)Utils.GetField("requiredResources", converter));
+            node.AddValue("RequiredResources", (string)Utils.GetField("RequiredResources", converter));
 
-            boolValue = (bool)Utils.GetField("SurfaceOnly", converter);
-            node.AddValue("SurfaceOnly", boolValue.ToString());
-
-            boolValue = (bool)Utils.GetField("converterEnabled", converter);
-            node.AddValue("converterEnabled", boolValue.ToString());
-
-            boolValue = (bool)Utils.GetField("alwaysOn", converter);
-            node.AddValue("alwaysOn", boolValue.ToString());
-
-            boolValue = (bool)Utils.GetField("requiresOxygenAtmo", converter);
-            node.AddValue("requiresOxygenAtmo", boolValue.ToString());
-
-            boolValue = (bool)Utils.GetField("shutdownIfAllOutputFull", converter);
-            node.AddValue("shutdownIfAllOutputFull", boolValue.ToString());
-
-            boolValue = (bool)Utils.GetField("showRemainingTime", converter);
-            node.AddValue("showRemainingTime", boolValue.ToString());
+            boolValue = (bool)Utils.GetField("IsActivated", converter);
+            node.AddValue("IsActivated", boolValue.ToString());
         }
 
         public void LoadFromNode(PartModule converter, ConfigNode node)
@@ -326,49 +321,29 @@ namespace WildBlueIndustries
                 converter.Load(node);
 
                 //Set its parameters
-                value = node.GetValue("converterName");
+                value = node.GetValue("ConverterName");
                 if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("converterName", value, converter);
+                    Utils.SetField("ConverterName", value, converter);
 
-                value = node.GetValue("conversionRate");
+                value = node.GetValue("EfficiencBonus");
                 if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("conversionRate", float.Parse(value), converter);
+                    Utils.SetField("EfficiencBonus", float.Parse(value), converter);
 
-                value = node.GetValue("inputResources");
+                value = node.GetValue("RecipeInputs");
                 if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("inputResources", value, converter);
+                    Utils.SetField("RecipeInputs", value, converter);
 
-                value = node.GetValue("outputResources");
+                value = node.GetValue("RecipeOutputs");
                 if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("outputResources", value, converter);
+                    Utils.SetField("RecipeOutputs", value, converter);
 
-                value = node.GetValue("requiredResources");
+                value = node.GetValue("RequiredResources");
                 if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("requiredResources", value, converter);
+                    Utils.SetField("RequiredResources", value, converter);
 
-                value = node.GetValue("SurfaceOnly");
+                value = node.GetValue("IsActivated");
                 if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("SurfaceOnly", bool.Parse(value), converter);
-
-                value = node.GetValue("converterEnabled");
-                if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("converterEnabled", bool.Parse(value), converter);
-
-                value = node.GetValue("alwaysOn");
-                if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("alwaysOn", bool.Parse(value), converter);
-
-                value = node.GetValue("requiresOxygenAtmo");
-                if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("requiresOxygenAtmo", bool.Parse(value), converter);
-
-                value = node.GetValue("shutdownIfAllOutputFull");
-                if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("shutdownIfAllOutputFull", bool.Parse(value), converter);
-
-                value = node.GetValue("showRemainingTime");
-                if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("showRemainingTime", bool.Parse(value), converter);
+                    Utils.SetField("IsActivated", bool.Parse(value), converter);
             }
 
             catch (Exception ex)
@@ -380,46 +355,26 @@ namespace WildBlueIndustries
         public void RunHeadless(PartModule converter)
         {
             Log("RunHeadless called.");
-            if (converter.Events["ActivateConverter"] != null)
+
+            if (converter.Events["StartResourceConverter"] != null)
             {
-                converter.Events["ActivateConverter"].active = false;
-                converter.Events["ActivateConverter"].guiActive = false;
-                converter.Events["ActivateConverter"].guiActiveEditor = false;
+                converter.Events["StartResourceConverter"].active = false;
+                converter.Events["StartResourceConverter"].guiActive = false;
+                converter.Events["StartResourceConverter"].guiActiveEditor = false;
             }
 
-            if (converter.Events["DeactivateConverter"] != null)
+            if (converter.Events["StopResourceConverter"] != null)
             {
-                converter.Events["DeactivateConverter"].active = false;
-                converter.Events["DeactivateConverter"].guiActiveEditor = false;
-                converter.Events["DeactivateConverter"].guiActive = false;
+                converter.Events["StopResourceConverter"].active = false;
+                converter.Events["StopResourceConverter"].guiActiveEditor = false;
+                converter.Events["StopResourceConverter"].guiActive = false;
             }
 
-            if (converter.Fields["remainingTimeDisplay"] != null)
+            if (converter.Fields["status"] != null)
             {
-                converter.Fields["remainingTimeDisplay"].guiActive = false;
-                converter.Fields["remainingTimeDisplay"].guiActiveEditor = false;
+                converter.Fields["status"].guiActive = false;
+                converter.Fields["status"].guiActiveEditor = false;
             }
-
-            if (converter.Fields["constraintDisplay"] != null)
-            {
-                converter.Fields["constraintDisplay"].guiActive = false;
-                converter.Fields["constraintDisplay"].guiActiveEditor = false;
-            }
-
-            if (converter.Fields["converterStatus"] != null)
-            {
-                converter.Fields["converterStatus"].guiActive = false;
-                converter.Fields["converterStatus"].guiActiveEditor = false;
-            }
-
-            if (converter.Fields["converterName"] != null)
-            {
-                converter.Fields["converterName"].guiActive = false;
-                converter.Fields["converterName"].guiActiveEditor = false;
-            }
-
-            if (converter.Actions["ToggleConverter"] != null)
-                converter.Actions["ToggleConverter"].active = false;
         }
 
         public virtual void Log(object message)

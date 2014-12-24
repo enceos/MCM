@@ -44,7 +44,7 @@ namespace WildBlueIndustries
             Texture moduleLogo = null;
             string panelName;
 
-            panelName = decalNames[templateName].GetValue("infoDecal");
+            panelName = parameterOverrides[templateName].GetValue("infoDecal");
             if (panelName != null)
                 moduleLogo = GameDatabase.Instance.GetTexture(_infoDecalsPath + "/" + panelName, false);
 
@@ -82,14 +82,12 @@ namespace WildBlueIndustries
                     if (addConverterHeader)
                     {
                         moduleInfo.Append("\r\nProduction\r\n");
-                        moduleInfo.Append("\r\n");
                         addConverterHeader = false;
                     }
 
                     converter = this.part.AddModule("KolonyConverter");
                     converter.Load(nodeConverter);
-                    moduleInfo.Append(Utils.GetField("converterName", converter) + "\r\n");
-                    moduleInfo.Append(converter.GetInfo() + "\r\n");
+                    moduleInfo.Append(converter.GetInfo());
                     this.part.RemoveModule(converter);
                 }
             }
@@ -202,6 +200,8 @@ namespace WildBlueIndustries
             if (_multiConverter == null)
                 _multiConverter = new MultiConverterModel(this.part, this.vessel, new LogDelegate(Log));
             _loadConvertersFromTemplate = _multiConverter.converters.Count > 0 ? false : true;
+            if (HighLogic.LoadedSceneIsEditor)
+                _loadConvertersFromTemplate = true;
 
             //Create the module ops window.
             createModuleOpsView();
@@ -262,10 +262,23 @@ namespace WildBlueIndustries
 
         protected void updateMKSModuleFromTemplate(ConfigNode nodeTemplate)
         {
-            string value;
+            Log("updateMKSModuleFromTemplate called with template: " + nodeTemplate);
+            string value = nodeTemplate.GetValue("shortName");
+            ConfigNode[] moduleNodes = nodeTemplate.GetNodes("MODULE");
+            ConfigNode mksNode = null;
+
+            //See if the template has an MKSModule
+            foreach (ConfigNode nodeModule in moduleNodes)
+            {
+                if (nodeModule.GetValue("name") == "MKSModule")
+                {
+                    mksNode = nodeModule;
+                    break;
+                }
+            }
 
             PartModule mksModule = this.part.Modules["MKSModule"];
-            if (mksModule)
+            if (mksModule != null && mksNode != null)
             {
                 //Has generators
                 if (_multiConverter.converters.Count > 0)
@@ -274,19 +287,21 @@ namespace WildBlueIndustries
                     Utils.SetField("hasGenerators", false, mksModule);
 
                 //workspace
-                value = nodeTemplate.GetValue("workspace");
+                value = mksNode.GetValue("workspace");
                 if (!string.IsNullOrEmpty(value))
                     Utils.SetField("workSpace", int.Parse(value), mksModule);
 
                 //livingSpace
-                value = nodeTemplate.GetValue("livingSpace");
+                value = mksNode.GetValue("livingSpace");
                 if (!string.IsNullOrEmpty(value))
                     Utils.SetField("livingSpace", int.Parse(value), mksModule);
 
                 //efficiencyPart
-                value = nodeTemplate.GetValue("efficiencyPart");
+                value = mksNode.GetValue("efficiencyPart");
                 if (!string.IsNullOrEmpty(value))
                     Utils.SetField("efficiencyPart", value, mksModule);
+                else
+                    Utils.SetField("efficiencyPart", string.Empty, mksModule);
             }
         }
 
