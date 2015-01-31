@@ -67,9 +67,9 @@ namespace WildBlueIndustries
             if (!string.IsNullOrEmpty(value))
                 moduleInfo.Append("\r\n" + value + "\r\n");
 
-            value = nodeTemplate.GetValue("mass");
-            if (!string.IsNullOrEmpty(value))
-                moduleInfo.Append("Mass: " + nodeTemplate.GetValue("mass") + "\r\n");
+//            value = nodeTemplate.GetValue("mass");
+//            if (!string.IsNullOrEmpty(value))
+//                moduleInfo.Append("Mass: " + nodeTemplate.GetValue("mass") + "\r\n");
 
             value = nodeTemplate.GetValue("CrewCapacity");
             if (!string.IsNullOrEmpty(value))
@@ -97,29 +97,56 @@ namespace WildBlueIndustries
 
         public void PreviewNextModule(string templateName)
         {
-            int templateIndex = templatesModel.FindIndexOfTemplate(templateName);
-            templateIndex = templatesModel.GetNextTemplateIndex(templateIndex);
+            //Get the template index associated with the template name
+            int curTemplateIndex = templatesModel.FindIndexOfTemplate(templateName);
 
+            //Get the next available template index
+            int templateIndex = templatesModel.GetNextUsableIndex(curTemplateIndex);
+
+            //Set preview name to the new template's name
             _moduleOpsView.previewName = templatesModel[templateIndex].GetValue("shortName");
-            _moduleOpsView.previewRequirements = _multiConverter.GetRequirements(templateIndex);
+
+            //Get next template name
+            templateIndex = templatesModel.GetNextUsableIndex(templateIndex);
+            if (templateIndex != -1 && templateIndex != curTemplateIndex)
+                _moduleOpsView.nextName = templatesModel[templateIndex].GetValue("shortName");
+
+            //Get previous template name
+            _moduleOpsView.prevName = templateName;
         }
 
         public void PreviewPrevModule(string templateName)
         {
-            int templateIndex = templatesModel.FindIndexOfTemplate(templateName);
-            templateIndex = templatesModel.GetPrevTemplateIndex(templateIndex);
+            //Get the template index associated with the template name
+            int curTemplateIndex = templatesModel.FindIndexOfTemplate(templateName);
 
+            //Get the previous available template index
+            int templateIndex = templatesModel.GetPrevUsableIndex(curTemplateIndex);
+
+            //Set preview name to the new template's name
             _moduleOpsView.previewName = templatesModel[templateIndex].GetValue("shortName");
-            _moduleOpsView.previewRequirements = _multiConverter.GetRequirements(templateIndex);
+
+            //Get next template name (which will be the current template)
+            _moduleOpsView.nextName = templateName;
+
+            //Get previous template name
+            templateIndex = templatesModel.GetPrevUsableIndex(templateIndex);
+            if (templateIndex != -1 && templateIndex != curTemplateIndex)
+                _moduleOpsView.prevName = templatesModel[templateIndex].GetValue("shortName");
         }
 
         public void SwitchModuleType(string templateName)
         {
+            Log("SwitchModuleType called.");
             //Can we use the index?
             EInvalidTemplateReasons reasonCode = templatesModel.CanUseTemplate(templateName);
             if (reasonCode == EInvalidTemplateReasons.TemplateIsValid)
             {
+                Log("Template is valid.");
+                bool prevLoadConverters = _loadConvertersFromTemplate;
+                _loadConvertersFromTemplate = true;
                 UpdateContentsAndGui(templateName);
+                _loadConvertersFromTemplate = prevLoadConverters;
                 return;
             }
 
@@ -154,7 +181,31 @@ namespace WildBlueIndustries
         [KSPEvent(guiActive = true, guiActiveEditor = true, guiName = "Manage Operations", active = true)]
         public void ManageOperations()
         {
+            Log("ManageOperations called");
+            int templateIndex = CurrentTemplateIndex;
+            bool hasRequiredTechToReconfigure = true;
+
+            //Set short name
             _moduleOpsView.shortName = shortName;
+
+            //Minimum tech
+            if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER && string.IsNullOrEmpty(techRequiredToReconfigure) == false)
+                hasRequiredTechToReconfigure = ResearchAndDevelopment.GetTechnologyState(techRequiredToReconfigure) == RDTech.State.Available ? true : false;
+            _moduleOpsView.canBeReconfigured = fieldReconfigurable & hasRequiredTechToReconfigure;
+
+            //Set preview, next, and previous
+            if (HighLogic.LoadedSceneIsEditor == false)
+            {
+                _moduleOpsView.previewName = shortName;
+
+                templateIndex = templatesModel.GetNextUsableIndex(CurrentTemplateIndex);
+                if (templateIndex != -1 && templateIndex != CurrentTemplateIndex)
+                    _moduleOpsView.nextName = templatesModel[templateIndex].GetValue("shortName");
+
+                templateIndex = templatesModel.GetPrevUsableIndex(CurrentTemplateIndex);
+                if (templateIndex != -1 && templateIndex != CurrentTemplateIndex)
+                    _moduleOpsView.prevName = templatesModel[templateIndex].GetValue("shortName");
+            }
 
             _moduleOpsView.ToggleVisible();
         }
@@ -211,11 +262,14 @@ namespace WildBlueIndustries
             _multiConverter.OnStart(state);
 
             //Override part mass with the actual module's part mass (taken from the template file)
-            if (moduleMass > 0f)
-                this.part.mass = moduleMass;
+//            if (moduleMass > 0f)
+//                this.part.mass = moduleMass;
 
-            //Lastly, fix module indexes (for things like the science lab)
+            //Fix module indexes (for things like the science lab)
             fixModuleIndexes();
+
+            //update MKSModule with one of the parts listed in overrides.
+//            updateMKSEfficiencyParts();
         }
 
         public override void OnUpdate()
@@ -235,8 +289,8 @@ namespace WildBlueIndustries
         public override void OnRedecorateModule(ConfigNode templateNode, bool payForRedecoration)
         {
             base.OnRedecorateModule(templateNode, payForRedecoration);
-            string value;
-            float mass;
+//            string value;
+//            float mass;
 
             //Play a nice construction sound effect
 
@@ -244,6 +298,7 @@ namespace WildBlueIndustries
             //NOTE: Only applies when not in editor mode, and only when payForRedecoration = true.
 
             //Set the part's mass and cost based upon the template.
+            /*
             value = templateNode.GetValue("mass");
             if (value != null)
             {
@@ -251,6 +306,7 @@ namespace WildBlueIndustries
                 moduleMass = mass;
                 this.part.mass = mass;
             }
+            */
 
             //Next, create MKS converters as specified in the template and set their values.
             if (_loadConvertersFromTemplate)
@@ -260,12 +316,14 @@ namespace WildBlueIndustries
             updateMKSModuleFromTemplate(templateNode);
         }
 
+
         protected void updateMKSModuleFromTemplate(ConfigNode nodeTemplate)
         {
             Log("updateMKSModuleFromTemplate called with template: " + nodeTemplate);
             string value = nodeTemplate.GetValue("shortName");
             ConfigNode[] moduleNodes = nodeTemplate.GetNodes("MODULE");
             ConfigNode mksNode = null;
+            ConfigNode paramterOverride = parameterOverrides[shortName];
 
             //See if the template has an MKSModule
             foreach (ConfigNode nodeModule in moduleNodes)
@@ -277,7 +335,7 @@ namespace WildBlueIndustries
                 }
             }
 
-            PartModule mksModule = this.part.Modules["MKSModule"];
+            PartModule mksModule = this.part.Modules["MKSEfficiencyModule"];
             if (mksModule != null && mksNode != null)
             {
                 //Has generators
@@ -287,21 +345,49 @@ namespace WildBlueIndustries
                     Utils.SetField("hasGenerators", false, mksModule);
 
                 //workspace
-                value = mksNode.GetValue("workspace");
+                value = paramterOverride.GetValue("workSpace");
                 if (!string.IsNullOrEmpty(value))
+                {
                     Utils.SetField("workSpace", int.Parse(value), mksModule);
+                }
+                else
+                {
+                    value = mksNode.GetValue("workspace");
+                    if (!string.IsNullOrEmpty(value))
+                        Utils.SetField("workSpace", int.Parse(value), mksModule);
+                }
 
                 //livingSpace
-                value = mksNode.GetValue("livingSpace");
+                value = paramterOverride.GetValue("livingSpace");
                 if (!string.IsNullOrEmpty(value))
+                {
                     Utils.SetField("livingSpace", int.Parse(value), mksModule);
+                }
+                else
+                {
+                    value = mksNode.GetValue("livingSpace");
+                    if (!string.IsNullOrEmpty(value))
+                        Utils.SetField("livingSpace", int.Parse(value), mksModule);
+                }
 
                 //efficiencyPart
-                value = mksNode.GetValue("efficiencyPart");
+                value = paramterOverride.GetValue("efficiencyPart");
                 if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("efficiencyPart", value, mksModule);
-                else
-                    Utils.SetField("efficiencyPart", string.Empty, mksModule);
+                {
+                    if (value != "none")
+                        Utils.SetField("efficiencyPart", value, mksModule);
+                    else
+                        Utils.SetField("efficiencyPart", string.Empty, mksModule);
+                }
+
+                else //Use the template
+                {
+                    value = mksNode.GetValue("efficiencyPart");
+                    if (!string.IsNullOrEmpty(value))
+                        Utils.SetField("efficiencyPart", value, mksModule);
+                    else
+                        Utils.SetField("efficiencyPart", string.Empty, mksModule);
+                }
             }
         }
 
@@ -311,18 +397,18 @@ namespace WildBlueIndustries
             string templateName;
 
             //Change the OpsView's names
+            _moduleOpsView.shortName = shortName;
+
             templateIndex = templatesModel.GetNextTemplateIndex(CurrentTemplateIndex);
             if (templateIndex != -1 && templateIndex != CurrentTemplateIndex)
             {
                 templateName = templatesModel[templateIndex].GetValue("shortName");
                 _moduleOpsView.nextName = templateName;
-                _moduleOpsView.nextRequirements = _multiConverter.GetRequirements(templatesModel.templateNodes[templateIndex]);
             }
 
             else
             {
                 _moduleOpsView.nextName = "none available";
-                _moduleOpsView.nextRequirements = "";
             }
 
             templateIndex = templatesModel.GetPrevTemplateIndex(CurrentTemplateIndex);
@@ -330,13 +416,17 @@ namespace WildBlueIndustries
             {
                 templateName = templatesModel[templateIndex].GetValue("shortName");
                 _moduleOpsView.prevName = templateName;
-                _moduleOpsView.prevRequirements = _multiConverter.GetRequirements(templatesModel.templateNodes[templateIndex]);
             }
 
             else
             {
                 _moduleOpsView.prevName = "none available";
-                _moduleOpsView.prevRequirements = "";
+            }
+
+            if (_moduleOpsView.IsVisible())
+            {
+                _moduleOpsView.converters = _multiConverter.converters;
+                _moduleOpsView.resources = this.part.Resources;
             }
         }
 
@@ -357,7 +447,7 @@ namespace WildBlueIndustries
         protected void createModuleOpsView()
         {
             Log("createModuleOpsView called");
-            PartModule mks = this.part.Modules["MKSModule"];
+            MKSEfficiencyModule mks = this.part.FindModuleImplementing<MKSEfficiencyModule>();
 
             _moduleOpsView = new ModuleOpsView();
             _moduleOpsView.converters = _multiConverter.converters;
@@ -376,7 +466,7 @@ namespace WildBlueIndustries
         protected override void hideEditorGUI(PartModule.StartState state)
         {
             base.hideEditorGUI(state);
-            PartModule mks = this.part.Modules["MKSModule"];
+            PartModule mks = this.part.Modules["MKSEfficiencyModule"];
             if (mks == null)
                 return;
 
@@ -435,7 +525,7 @@ namespace WildBlueIndustries
             base.initModuleGUI();
             int index;
             string value;
-            PartModule mks = this.part.Modules["MKSModule"];
+            PartModule mks = this.part.Modules["MKSEfficiencyModule"];
 
             //Hide MKSModule gui
             if (mks.Fields["Efficiency"] != null)
@@ -450,7 +540,6 @@ namespace WildBlueIndustries
             {
                 value = templatesModel.templateNodes[index].GetValue("shortName");
                 _moduleOpsView.nextName = value;
-                _moduleOpsView.nextRequirements = _multiConverter.GetRequirements(templatesModel.templateNodes[index]);
             }
 
             index = templatesModel.GetPrevTemplateIndex(CurrentTemplateIndex);
@@ -458,7 +547,6 @@ namespace WildBlueIndustries
             {
                 value = templatesModel.templateNodes[index].GetValue("shortName");
                 _moduleOpsView.prevName = value;
-                _moduleOpsView.prevRequirements = _multiConverter.GetRequirements(templatesModel.templateNodes[index]);
             }
 
             initFloodlights();

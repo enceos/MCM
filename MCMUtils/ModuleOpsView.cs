@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using KSP.IO;
+using KolonyTools;
 
 namespace WildBlueIndustries
 {
@@ -17,14 +18,15 @@ namespace WildBlueIndustries
 
     class ModuleOpsView : Window<ModuleOpsView>
     {
-        public List<PartModule> converters = null;
-        public PartModule mks;
+        public List<KolonyConverter> converters = null;
+        public MKSEfficiencyModule mks;
         public Part part;
         public PartResourceList resources;
+        public bool canBeReconfigured;
         public string shortName;
-        public string nextName, nextRequirements;
-        public string prevName, prevRequirements;
-        public string previewName, previewRequirements;
+        public string nextName;
+        public string prevName;
+        public string previewName;
         public NextModule nextModuleDelegate = null;
         public PrevModule prevModuleDelegate = null;
         public NextPreviewModule nextPreviewDelegate = null;
@@ -76,12 +78,11 @@ namespace WildBlueIndustries
         {
             string moduleInfo;
             Texture moduleLabel;
-            bool governorActive = false;
-
             GUILayout.BeginVertical(GUILayout.MaxWidth(350f));
 
             //Efficiency Label
-            GUILayout.Label(shortName + " efficiency: " + Utils.GetField("efficiency", mks));
+            if (converters.Count<KolonyConverter>() > 0)
+                GUILayout.Label(shortName + " efficiency: " + mks.efficiency);
 
             //More info button to display detailed info on the module
             if (GUILayout.Button("More Info"))
@@ -103,11 +104,6 @@ namespace WildBlueIndustries
             //KolonyConverters
             drawKolonyConverters();
 
-            //Governer toggle
-            governorActive = (bool)Utils.GetField("governorActive", mks);
-            governorActive = GUILayout.Toggle(governorActive, "Enable Governor");
-            Utils.SetField("governorActive", governorActive, mks);
-
             //Depending upon loaded scene, we'll either show the module next/prev buttons and labels
             //or we'll show the module preview buttons.
             if (!HighLogic.LoadedSceneIsEditor)
@@ -120,61 +116,52 @@ namespace WildBlueIndustries
 
         protected void drawEditorGUI()
         {
-            //Next module label
-            GUILayout.Label("Next: " + nextName + " requires " + nextRequirements, GUILayout.MinHeight(50));
-
-            //Previous module label
-            GUILayout.Label("Prev: " + prevName + " requires " + prevRequirements, GUILayout.MinHeight(50));
-
             //Next/Prev buttons
-            GUILayout.BeginHorizontal();
-
-            if (GUILayout.Button("Prev Type"))
-                if (prevModuleDelegate != null)
-                    prevModuleDelegate();
-
-            if (GUILayout.Button("Next Type"))
+            if (GUILayout.Button("Next: " + nextName))
                 if (nextModuleDelegate != null)
                     nextModuleDelegate();
 
-            GUILayout.EndHorizontal();
+            if (GUILayout.Button("Prev: " + prevName))
+                if (prevModuleDelegate != null)
+                    prevModuleDelegate();
         }
 
         protected void drawPreviewGUI()
         {
+            //Only allow reconfiguring of the module if it allows field reconfiguration.
+            if (canBeReconfigured == false)
+            {
+                GUILayout.FlexibleSpace();
+                GUILayout.Label("This module cannot be reconfigured. Research more technology.");
+                GUILayout.FlexibleSpace();
+                return;
+            }
+
             string moduleInfo;
 
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
-            GUILayout.Label("Module Previews");
+            GUILayout.Label("Current Preview: " + previewName);
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
             //Make sure we have something to display
             if (string.IsNullOrEmpty(previewName))
-            {
                 previewName = nextName;
-                previewRequirements = nextRequirements;
-            }
-
-            //Name and requirements
-            GUILayout.Label(previewName + " requires " + previewRequirements, GUILayout.MinHeight(50));
-
-            GUILayout.BeginHorizontal();
-            //Prev preview button
-            if (GUILayout.Button("Prev Module"))
-            {
-                if (prevPreviewDelegate != null)
-                    prevPreviewDelegate(previewName);
-            }
 
             //Next preview button
-            if (GUILayout.Button("Next Module"))
+            if (GUILayout.Button("Next: " + nextName))
             {
                 if (nextPreviewDelegate != null)
                     nextPreviewDelegate(previewName);
             }
-            GUILayout.EndHorizontal();
+
+            //Prev preview button
+            if (GUILayout.Button("Prev: " + prevName))
+            {
+                if (prevPreviewDelegate != null)
+                    prevPreviewDelegate(previewName);
+            }
 
             //More info button
             GUILayout.BeginHorizontal();
@@ -212,25 +199,35 @@ namespace WildBlueIndustries
         protected void drawKolonyConverters()
         {
             GUILayout.BeginVertical(GUILayout.MinHeight(110));
-            bool converterEnabled = false;
             string converterName = "??";
             string converterStatus = "??";
+            bool isActivated;
 
             _scrollPosConverters = GUILayout.BeginScrollView(_scrollPosConverters, new GUIStyle(GUI.skin.textArea));
 
-            foreach (PartModule converter in converters)
+            foreach (KolonyConverter converter in converters)
             {
-                converterEnabled = (bool)Utils.GetField("IsActivated", converter);
-                converterName = (string)Utils.GetField("ConverterName", converter);
-                converterStatus = (string)Utils.GetField("status", converter);
+                converterName = converter.ConverterName;
+                converterStatus = converter.status;
+                isActivated = converter.IsActivated;
 
                 GUILayout.BeginVertical();
                 //Toggle, name and status message
                 if (!HighLogic.LoadedSceneIsEditor)
-                    converterEnabled = GUILayout.Toggle(converterEnabled, converterName + ": " + converterStatus);
+                    isActivated = GUILayout.Toggle(isActivated, converterName + ": " + converterStatus);
                 else
-                    converterEnabled = GUILayout.Toggle(converterEnabled, converterName);
-                Utils.SetField("IsActivated", converterEnabled, converter);
+                    isActivated = GUILayout.Toggle(isActivated, converterName);
+
+                if (converter.IsActivated != isActivated)
+                {
+                    converter.IsActivated = isActivated;
+                    if (converter.IsActivated)
+                    {
+                        Debug.Log("FRED converter is active");
+                        mks.GetEfficiencyRate();
+                        converter.OnAwake();
+                    }
+                }
 
                 GUILayout.EndVertical();
             }

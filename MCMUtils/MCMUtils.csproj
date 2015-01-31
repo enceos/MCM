@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>WildBlueIndustries</RootNamespace>
     <AssemblyName>MCMUtils</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -38,20 +39,35 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program\GameData\Firespitter\Plugins\Firespitter.dll</HintPath>
     </Reference>
+    <Reference Include="KolonyTools, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program\GameData\UmbraSpaceIndustries\Kolonization\KolonyTools.dll</HintPath>
+    </Reference>
+    <Reference Include="Regolith, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program\GameData\Regolith\Regolith.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program\KSP_Data\Managed\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="USITools, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\SteamApps\common\Kerbal Space Program\GameData\000_USITools\USITools.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MKSEfficiencyModule.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="MKSExtensionModule.cs" />
     <Compile Include="MKSModuleController.cs" />
+    <Compile Include="MKSModuleX.cs" />
     <Compile Include="MKSStorageController.cs" />
     <Compile Include="MultiConverterModel.cs" />
     <Compile Include="ModuleInfoView.cs" />

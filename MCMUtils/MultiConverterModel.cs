@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using KSP.IO;
+using KolonyTools;
 
 /*
 Source code copyrighgt 2014, by Michael Billard (Angel-125)
@@ -23,7 +24,7 @@ namespace WildBlueIndustries
         public LogDelegate logDelegate = null;
         public Part part = null;
         public Vessel vessel = null;
-        public List<PartModule> converters;
+        public List<KolonyConverter> converters;
 
         #region API
         public MultiConverterModel(Part part, Vessel vessel, LogDelegate logDelegate)
@@ -32,7 +33,7 @@ namespace WildBlueIndustries
             this.vessel = vessel;
             this.logDelegate = logDelegate;
 
-            this.converters = new List<PartModule>();
+            this.converters = new List<KolonyConverter>();
         }
 
         public void Clear()
@@ -55,7 +56,7 @@ namespace WildBlueIndustries
         {
             Log("[MultiConverterModel] Load called.");
             ConfigNode[] converterNodes = node.GetNodes("KolonyConverter");
-            PartModule genericConverter;
+            KolonyConverter genericConverter;
 
             if (converterNodes == null)
             {
@@ -70,7 +71,7 @@ namespace WildBlueIndustries
             foreach (ConfigNode converterNode in converterNodes)
             {
                 //Create the converter
-                genericConverter = this.part.AddModule("KolonyConverter");
+                genericConverter = (KolonyConverter)this.part.AddModule("KolonyConverter");
 
                 //Load its data from the node
                 LoadFromNode(genericConverter, converterNode);
@@ -82,14 +83,14 @@ namespace WildBlueIndustries
                 converters.Add(genericConverter);
             }
 
-            Log("[MultiConverterModel] converter count: " + converters.Count<PartModule>());
+            Log("[MultiConverterModel] converter count: " + converters.Count<KolonyConverter>());
         }
 
         public void Save(ConfigNode node)
         {
             ConfigNode converterNode;
 
-            foreach (PartModule converter in converters)
+            foreach (KolonyConverter converter in converters)
             {
                 //Generate a new config node
                 converterNode = ConfigNode.CreateConfigFromObject(converter);
@@ -107,7 +108,7 @@ namespace WildBlueIndustries
         public PartModule AddFromTemplate(ConfigNode node)
         {
             Log("AddFromTemplate called");
-            PartModule converter = this.part.AddModule(node);
+            KolonyConverter converter = (KolonyConverter)this.part.AddModule(node);
             if (converter == null)
                 Log("Converter is null");
             else
@@ -124,6 +125,7 @@ namespace WildBlueIndustries
 
             //Add it to the list
             this.converters.Add(converter);
+            Debug.Log("Added converter " + converter.ConverterName);
 
             return converter;
         }
@@ -245,11 +247,13 @@ namespace WildBlueIndustries
 
         public void OnStart(PartModule.StartState state)
         {
-            Log("[MulticonverterModel] OnStart - State: " + state + "  Converter count: " + converters.Count<PartModule>());
+            Log("[MulticonverterModel] OnStart - State: " + state + "  Converter count: " + converters.Count<KolonyConverter>());
 
-            foreach (PartModule converter in converters)
+            foreach (KolonyConverter converter in converters)
             {
                 RunHeadless(converter);
+                if (converter.IsActivated)
+                    converter.StartResourceConverter();
             }
         }
 
@@ -288,62 +292,33 @@ namespace WildBlueIndustries
          * 
          * So right now this solution is kludgy but it does work, and I have runtime configurable colony modules. :)
          */
-        public void SaveToNode(PartModule converter, ConfigNode node)
+        public void SaveToNode(KolonyConverter converter, ConfigNode node)
         {
-            bool boolValue;
-            float floatValue;
-
             //We'll get the private fields saved this way
             converter.Save(node);
 
-            node.AddValue("ConverterName", (string)Utils.GetField("ConverterName", converter));
-
-            floatValue = (float)Utils.GetField("EfficiencBonus", converter);
-            node.AddValue("EfficiencBonus", floatValue.ToString());
-
-            node.AddValue("RecipeInputs", (string)Utils.GetField("RecipeInputs", converter));
-
-            node.AddValue("RecipeOutputs", (string)Utils.GetField("RecipeOutputs", converter));
-
-            node.AddValue("RequiredResources", (string)Utils.GetField("RequiredResources", converter));
-
-            boolValue = (bool)Utils.GetField("IsActivated", converter);
-            node.AddValue("IsActivated", boolValue.ToString());
+            node.AddValue("ConverterName", converter.ConverterName);
+            node.AddValue("EfficiencyBonus", converter.EfficiencyBonus.ToString());
+            node.AddValue("RecipeInputs", converter.RecipeInputs);
+            node.AddValue("RecipeOutputs", converter.RecipeOutputs);
+            node.AddValue("RequiredResources", converter.RequiredResources);
+            node.AddValue("IsActivated", converter.IsActivated.ToString());
         }
 
-        public void LoadFromNode(PartModule converter, ConfigNode node)
+        public void LoadFromNode(KolonyConverter converter, ConfigNode node)
         {
-            string value;
-
             try
             {
                 //This will load our private fields
                 converter.Load(node);
 
                 //Set its parameters
-                value = node.GetValue("ConverterName");
-                if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("ConverterName", value, converter);
-
-                value = node.GetValue("EfficiencBonus");
-                if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("EfficiencBonus", float.Parse(value), converter);
-
-                value = node.GetValue("RecipeInputs");
-                if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("RecipeInputs", value, converter);
-
-                value = node.GetValue("RecipeOutputs");
-                if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("RecipeOutputs", value, converter);
-
-                value = node.GetValue("RequiredResources");
-                if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("RequiredResources", value, converter);
-
-                value = node.GetValue("IsActivated");
-                if (!string.IsNullOrEmpty(value))
-                    Utils.SetField("IsActivated", bool.Parse(value), converter);
+                converter.ConverterName = node.GetValue("ConverterName");
+                converter.EfficiencyBonus = float.Parse(node.GetValue("EfficiencyBonus"));
+                converter.RecipeInputs = node.GetValue("RecipeInputs");
+                converter.RecipeOutputs = node.GetValue("RecipeOutputs");
+                converter.RequiredResources = node.GetValue("RequiredResources");
+                converter.IsActivated = bool.Parse(node.GetValue("IsActivated"));
             }
 
             catch (Exception ex)
