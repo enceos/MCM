@@ -44,7 +44,7 @@ Skydock 250 Features
 •	Compatible with Extraplanetary Launchpads. Uses the standard Ore->Metal->RocketParts resource path.
 •	Scrap vessels with the built-in Recycler.
 
-Homestead Inflatable Multipurpose Module (IMM) Featuers
+Homestead Inflatable Multipurpose Module (IMM) Features
 •	Fits within the 2.5m standard payload diameter.
 •	Ruggedized construction provides high crash tolerance in a lightweight frame.
 •	Fully configurable within the VAB/SPH to provide desired MKS/OKS functionality.
@@ -54,11 +54,29 @@ Homestead Inflatable Multipurpose Module (IMM) Featuers
 •	Friendly Module Operations Manager (MOM) that cleans up the context menu, displays resources, shows detailed module information normally reserved for the VAB/SPH, and more.
 •	Integrated RCS ports help facilitate docking maneuvers.
 
+Ponderosa Advanced Colony Module (ACM) Features
+•	Can be carried by a kerbal on EVA and deployed.
+•	Fits standard KAS mounting bracket.
+•	Fits inside appropriately sized KAS containers.
+•	Fully configurable within the VAB/SPH to provide desired MKS/OKS functionality.
+•	Dynamically displays the module’s current purpose.
+•	Friendly Module Operations Manager (MOM) that cleans up the context menu, displays resources, shows detailed module information normally reserved for the VAB/SPH, and more.
+
 ---INSTALLATION---
 
 Copy the WildBlueIndustries directory and Firespitter directory into your GameData folder.
 
 ---REVISION HISTORY---
+
+Release 0.4.1
+- Added the Ponderosa, Wild Blue Industries’ top of the line colonization module. The Ponderosa can be stored in a KAS container (it takes up 90 KAS units of space) and stored on a standard KAS container bay. To deploy the Ponderosa, simply grab the module while on EVA, walk or fly over to the desired site, drop the module, and deploy it. Optionally, you can attach it to the ground before deployment, but you’ll need to re-orient the module first.
+- Added the Portable Crew Tube (PCT). The PCT is just like the Flex-O-Tube except that the PCT has a more stock-like appearance and it can be stored on the MBU for easy attachment.
+- Repositioned the location where new spacecraft are spawned by the Skydock250 and Skydock375. Hopefully that’ll reduce the chances of the docks causing an explosion when spawning new craft.
+- Added MM config file to hide unused MKS/OKS parts. They’re still around, just not shown in the editor.
+- Added MM config file for KSOS modules: The cupola can now become a Colony Command Center; the station power module can now become a PDU; the KerbaLab can now become a Multipurpose Colony Module; the hydroponics module may be used as an efficiency part for the Aeroponics module; and the habitat module may be used as an efficiency part for the Kerbitat.
+NOTE: You might need to delete your ModuleManager.CONFIGCACHE and ModuleManager.ConfigSHA.CONFIGSHA file, located in the GameData folder, for the MM config changes to take effect.
+- Added OSE workshop to the Fabricator template. Now you can print KAS grabbable and storable parts! OSE Workshop by ObiVanDamme downloaded separately. Link: http://forum.kerbalspaceprogram.com/threads/108234-0-90-OSE-Workshop-KAS-Addon-%28v0-2-0-2015-01-26%29
+NOTE: If you don't have the OSE Workshop, no worries, Multipurpose Colony Modules won't complain (but you are missing out...)
 
 0.4.0: 
 IMPORTANT NOTE: You'll need USI Kolonization Systems 0.22.6 or higher.
@@ -84,8 +102,6 @@ NOTE: Your existing IMEMs will need to be retired before installing this update.
 - Made some improvements to the Module Operations Manager (MOM).
 - Corrected description and cost for the Skydock 375.
 - Added the Homestead Inflatable Multipurpose Module (IMM). Homestead is a large inflatable module that can serve as a colony module or as a large-capacity storage module. The Homestead serves as its own efficiency part.
-
-- Added the Ponderosa Advanced Colony Module (ACM). Ponderosa is the penultimate colony module in Wild Blue Industries' product line. When deflated, it can be carried on the back of a Kerbal on EVA, fits standard KAS container bays, and is easily deployed in the field. Once deployed, it will require Machinery to configure into the desired colony module (this is in addition to the Machinery required by most modules to operate).
 
 --- Optional Components ---
 

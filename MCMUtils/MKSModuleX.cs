@@ -15,7 +15,6 @@ namespace WildBlueIndustries
 
         public override float GetEfficiencyRate()
         {
-            print("FRED GetEfficiencyRate");
             var curConverters = GetActiveKolonyModules(vessel);
             if (curConverters != _numConverters)
             {

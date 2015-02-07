@@ -223,7 +223,6 @@ namespace WildBlueIndustries
                     converter.IsActivated = isActivated;
                     if (converter.IsActivated)
                     {
-                        Debug.Log("FRED converter is active");
                         mks.GetEfficiencyRate();
                         converter.OnAwake();
                     }

@@ -481,6 +481,12 @@ namespace WildBlueIndustries
         protected void initFloodlights()
         {
             Log("initFloodlights called");
+
+            if (this.part.Modules.Contains("FSanimateGeneric") == false)
+                return;
+            if (this.part.Modules.Contains("FSmeshSwitch") == false)
+                return;
+
             PartModule floodlightAnim = this.part.Modules["FSanimateGeneric"];
             PartModule meshSwitch = this.part.Modules["FSmeshSwitch"];
             string[] meshNames;
