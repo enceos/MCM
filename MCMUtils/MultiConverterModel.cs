@@ -108,6 +108,12 @@ namespace WildBlueIndustries
         public PartModule AddFromTemplate(ConfigNode node)
         {
             Log("AddFromTemplate called");
+
+            string value = node.GetValue("needs");
+            if (string.IsNullOrEmpty(value) == false)
+                if (TemplatesModel.CheckNeeds(value) == EInvalidTemplateReasons.RequiredModuleNotFound)
+                    return null;
+
             KolonyConverter converter = (KolonyConverter)this.part.AddModule(node);
             if (converter == null)
                 Log("Converter is null");

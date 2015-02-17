@@ -68,6 +68,14 @@ Copy the WildBlueIndustries directory and Firespitter directory into your GameDa
 
 ---REVISION HISTORY---
 
+Release 0.4.3
+- Templates that require mods that are not installed won't appear in the available templates list.
+- KolonyConverters that require mods that are not installed won't appear in the Module Operations Manager.
+- Bug fixes
+
+Release 0.4.2
+- Updated release to just include the game files.
+
 Release 0.4.1
 - Added the Ponderosa, Wild Blue Industries’ top of the line colonization module. The Ponderosa can be stored in a KAS container (it takes up 90 KAS units of space) and stored on a standard KAS container bay. To deploy the Ponderosa, simply grab the module while on EVA, walk or fly over to the desired site, drop the module, and deploy it. Optionally, you can attach it to the ground before deployment, but you’ll need to re-orient the module first.
 - Added the Portable Crew Tube (PCT). The PCT is just like the Flex-O-Tube except that the PCT has a more stock-like appearance and it can be stored on the MBU for easy attachment.
