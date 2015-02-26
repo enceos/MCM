@@ -40,7 +40,7 @@ namespace WildBlueIndustries
             base.OnRedecorateModule(nodeTemplate, payForRedecoration);
         }
 
-        protected override void loadResourcesFromTemplate(ConfigNode nodeTemplate)
+        public override void loadResourcesFromTemplate(ConfigNode nodeTemplate)
         {
             base.loadResourcesFromTemplate(nodeTemplate);
         }

@@ -68,6 +68,14 @@ Copy the WildBlueIndustries directory and Firespitter directory into your GameDa
 
 ---REVISION HISTORY---
 
+Release 0.4.4: Rookie Maneuver Edition
+- Fixed a problem with symmetry that prevented parts from updating resources properly. This also fixes the issue with duplicating parts.
+- Fixed an issue with the Homestead that was rather inhospitable to kerbals trying to enter the module. It's more neighborly now.
+- (IN TESTING) Fixed an issue with Machinery not showing up on the launchpad after being filled up prior to launch.
+- Lightened the Ponderosa by a ton- it's a space tent after all!
+- The Ponderosa's default vessel type is now Base.
+- The Homestead's default vessel type is now Base.
+
 Release 0.4.3
 - Templates that require mods that are not installed won't appear in the available templates list.
 - KolonyConverters that require mods that are not installed won't appear in the Module Operations Manager.
@@ -152,7 +160,7 @@ Known Issues
 
 ---ACKNOWLEDGEMENTS---
 
-MKS Acknowledgements: TaranisElsu (TAC Life Support, Window code), RoverDude (MKS parts, MKS graphics assets, KolonyTools/USITools dll), Garibaldi2257 (Inline Resource Tank). Portions of the code are ported from the Firespitter plugin by Snjo. Thank you Snjo for sharing how to switch meshes! :)
+MKS Acknowledgements: TaranisElsu (TAC Life Support, Window code), RoverDude (MKS parts, MKS graphics assets, KolonyTools/USITools dll), Garibaldi2257 (Inline Resource Tank). Portions of the code are ported from the Firespitter plugin by Snjo. Thank you Snjo for sharing how to switch meshes! :) Portions of this code are from KSPI Extensions by Swamp-Ig.
 
 ---LICENSE---
 
